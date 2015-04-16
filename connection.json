@@ -1,1 +1,1 @@
-[{"name":"Select connection","value":"dbselectcon"},{"name":"Emres","value":"{\"host\":\"GGGMPSCDDBS02\\\\GGGMPSCDDTBK01\",\"port\":\"1433\",\"user\":\"SRW_emres\",\"userName\":\"SRW_emres\",\"pass\":\"SRW_emres_scada7\",\"password\":\"SRW_emres_scada7\",\"name\":\"Emres\",\"database\":\"emres\",\"instance\":\"tedious\"}"}]
+[]

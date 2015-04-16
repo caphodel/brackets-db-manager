@@ -418,6 +418,7 @@ define(function (require, exports, module) {
 		
 		$.getJSON(path+'connection.json', function(data){
 			$('#dbSelectConnection').empty();
+            $('#dbSelectConnection').append("<option value='' data-name=''>List of connection</option>");
 			$.each(data, function(i, val){
 				$('#dbSelectConnection').append("<option value='"+val.value+"' data-name='"+val.name+"'>"+val.name+"</option>");
 			});
