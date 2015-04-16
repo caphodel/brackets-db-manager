@@ -503,7 +503,7 @@ define(function (require, exports, module) {
         
 		ExtensionUtils.loadStyleSheet(module, "css/db.css");
 		
-        CommandManager.register("Database Client", ext_id, handlePanel);
+        CommandManager.register("Database Manager", ext_id, handlePanel);
 
         var menu = Menus.getMenu(Menus.AppMenuBar.VIEW_MENU);
         menu.addMenuItem(ext_id);
