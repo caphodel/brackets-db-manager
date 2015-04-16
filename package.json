@@ -4,7 +4,7 @@
     "title": "Brackets DB Manager",
     "description": "A brackets extension to querying a database server, now only support SQL server. Now it's only offer basic functionality, like browse databases, tables, show table fields, show table data in a paging table, run query (all text in a document or just a selection of it). PLease report/info me about bug, issue and idea, so I can fix and improve this addon. Please click read more to learn how to connect to a database. Thanks",
     "keywords": ["Database", "sql server"],
-    "version": "0.1.0",
+    "version": "0.1.1",
 
     "license": "MIT",
     "homepage": "",
