@@ -9,14 +9,14 @@ It is actually a modified of https://github.com/Azakur4/brackets-database becaus
 
 To do
 ====================
-[ ] Show list of view
-[ ] Show and edit view
-[ ] Show list of function
-[ ] Show and edit function
-[ ] Show table trigger
-[ ] Edit table fields
-[ ] Edit table data
-[ ] Add mysql support
-[ ] Add postgresql support
+- [ ] Show list of view
+- [ ] Show and edit view
+- [ ] Show list of function
+- [ ] Show and edit function
+- [ ] Show table trigger
+- [ ] Edit table fields
+- [ ] Edit table data
+- [ ] Add mysql support
+- [ ] Add postgresql support
 
 PLease report/info me about bug, issue and idea, so I can fix and improve this addon, thanks.
