@@ -1,0 +1,41 @@
+<div class="db-form-connect">
+    <div class="group">
+		<select id="dbSelectConnection">
+		</select>
+	</div>
+    <div class="group">
+        <label style="width:130px;">Connection Name :
+        </label>
+        <input type="text" name="dbname" id="dbname" /><br/>
+        
+        <label style="width:130px;">Database Instance :
+        </label>
+		<select type="is" name="dbinstance" id="dbinstance">
+			<option value="tedious" port="1433">SQL Server</option>
+		</select>
+	</div>
+    <div class="group">
+        <label style="width:130px;">Host :</label>
+        <input type="text" name="dbhost" id="dbhost" /><br/>
+
+        <label style="width:130px;">Port :</label>
+        <input type="text" name="dbport" id="dbport" />
+    </div>
+
+    <div class="group">
+        <label style="width:130px;">User :</label>
+        <input type="text" name="dbuser" id="dbuser" /><br/>
+
+        <label style="width:130px;">Password :</label>
+        <input type="password" name="dbpassword" id="dbpassword" />
+    </div>
+
+    <div class="group">
+        <label style="width:130px;">Database :</label>
+		<input type="text" name="dbdatabase" id="dbdatabase" />
+    </div>
+	<div class="group">
+		<button id="dbsaveconnection" class="btn small">Save</button>
+        <button title="Connect" class="btn small db-connect">Connect</button>
+	</div>
+</div>

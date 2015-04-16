@@ -1,0 +1,40 @@
+<div class="db-table-result-container">
+    <div class="db-table-head">
+        <table class="table table-striped row-highlight" style="margin-bottom:0px !important">
+            <thead>
+                <tr style="position:relative;">
+                    <th>No</th>
+                    {{#fields}}
+                    <th>{{name}}</th>
+                    {{/fields}}
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="db-table-body">
+        <table class="table table-striped row-highlight" style="margin-bottom:0px !important">
+            <tbody>
+                {{#rows}}
+                <tr>
+                    {{#.}}
+                    <td>{{.}}</td>
+                    {{/.}}
+                </tr>
+                {{/rows}}
+            </tbody>
+        </table>
+    </div>
+    <div class="db-table-foot">
+        <table class="table table-striped row-highlight" style="margin-bottom:0px !important">
+            <tfoot>
+                <tr>
+                    <td colspan="999">
+                        <button class="btn small db-table-data-prev">&lt;</button>
+                        <input type="text" style="width:30px;margin-bottom:0px;" value="{{page}}" class="db-table-data-page"/>
+                        <button class="btn small db-table-data-next">&gt;</button>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

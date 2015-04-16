@@ -1,0 +1,22 @@
+<div id="database-panel" class="database bottom-panel vert-resizable top-resizer no-focus">
+    <div class="toolbar simple-toolbar-layout">
+        <div class="db-group-left">
+            <button title="Query" class="btn small db-run-query" disabled>Run</button>
+            <span>Active Database: </span><select id="db-active-database"></select>
+        </div>
+        <div class="db-group-right">
+            <button title="Disconnect" class="btn small db-disconnect" disabled>Disconnect</button>
+        </div>
+        <a href="#" class="close">&times;</a>
+    </div>
+    <div class="db-tabs" style="padding-bottom:0px;"></div>
+    <div class="table-container resizable-content db-container"></div>
+	<div class="toolbar simple-toolbar-layout" style="height:25px">
+        <div class="db-group-left">
+            <span data="" id="dboptions"></span>
+        </div>
+        <div class="db-group-right">
+            <span id="dbquerymessage"></span>
+        </div>
+    </div>
+</div>

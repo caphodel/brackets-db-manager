@@ -1,0 +1,16 @@
+<table class="db-table table table-striped row-highlight">
+    <thead>
+        <th>Column Name</th>
+        <th>Data Type</th>
+        <th>Allow Nulls</th>
+    </thead>
+    <tbody>
+        {{#fields}}
+        <tr>
+            <td>{{column_name}}</td>
+            <td>{{data_type}}</td>
+            <td>{{is_nullable}}</td>
+        </tr>
+        {{/fields}}
+    </tbody>
+</table>

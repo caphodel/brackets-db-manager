@@ -1,0 +1,65 @@
+/* CSS Tree menu styles */
+#dbsidebar label, #dbsidebar i{
+    font-size: 13px !important;
+}
+#dbsidebar ol.tree
+{
+	padding: 0 0 0 0px;
+	width: 300px;
+}
+#dbsidebar li 
+{ 
+	position: relative; 
+	margin-left: -15px;
+	list-style: none;
+}
+#dbsidebar li.file
+{
+	margin-left: -1px !important;
+}
+#dbsidebar li.file a
+{
+	color: #fff;
+	padding-left: 21px;
+	text-decoration: none;
+	display: block;
+}
+
+#dbsidebar li input
+{
+	position: absolute;
+	left: 0;
+	margin-left: 0;
+	opacity: 0;
+	z-index: 2;
+	cursor: pointer;
+	top: 0;
+    height: 18px;
+    width: 100%;
+}
+#dbsidebar li input + ol
+{
+	/*background: url(toggle-small-expand.png) 40px 0 no-repeat;*/
+	margin: -0.938em 0 0 -44px; /* 15px */
+	height: 1em;
+}
+#dbsidebar li input + ol > li { display: none; margin-left: -14px !important; padding-left: 1px; }
+#dbsidebar li label
+{
+	cursor: pointer;
+	display: block;
+}
+
+#dbsidebar li input:checked + ol
+{
+	/*background: url(toggle-small.png) 40px 5px no-repeat;*/
+	margin: -1.25em 0 0 -44px; /* 20px */
+	padding: /*1.563em*/ 1em 0 0 80px;
+	height: auto;
+}
+#dbsidebar li input:checked + ol > li { display: block; margin: 0 0 0.125em;  /* 2px */}
+#dbsidebar li input:checked + ol > li:last-child { margin: 0 0 0.063em; /* 1px */ }
+
+.tab-inactive{
+    color: #726F70 !important;
+}
