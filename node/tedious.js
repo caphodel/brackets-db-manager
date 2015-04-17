@@ -130,6 +130,31 @@ maxerr: 50, node: true */
         connection.execSql(request);
 	}
 	
+	function cmdViewList(callback){
+        var Request = require('tedious').Request, viewname = [];
+        var request = new Request("SELECT sobjects.name FROM sysobjects sobjects WHERE sobjects.xtype = 'V' order by name", function(err, rowCount) {
+            if (err) {
+                callback(null, {
+                    status: false,
+                    message: err.message
+                });
+            } else {
+                callback(null, {
+                    status: true,
+                    view: viewname
+                });
+            }
+        });
+
+        request.on('row', function(columns) {
+            columns.forEach(function(column) {
+                viewname.push({"viewname": column.value});
+            });
+        });
+
+        connection.execSql(request);
+	}
+
 	function cmdFieldList(tableName, callback){
         var Request = require('tedious').Request, fieldsName = [];
         var request = new Request("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'"+tableName+"'", function(err, rowCount) {
@@ -271,6 +296,14 @@ maxerr: 50, node: true */
             cmdTableList,
             true,
             "Get table list"
+        );
+
+        domainManager.registerCommand(
+            "simple",
+            "getviews",
+            cmdViewList,
+            true,
+            "Get view list"
         );
 
         domainManager.registerCommand(

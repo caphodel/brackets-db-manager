@@ -25,6 +25,7 @@ define(function (require, exports, module) {
         connectTemplate = require("text!templates/database-connect.html"),
         sidebarTemplate = require("text!templates/database-sidebar.html"),
         dbListTemplate = require("text!templates/database-list.html"),
+        viewListTemplate = require("text!templates/view-list.html"),
         tableListTemplate = require("text!templates/table-list.html"),
         tablePanelTemplate = require("text!templates/table-panel.html"),
         tableFieldsTemplate = require("text!templates/table-fields.html"),
@@ -186,6 +187,28 @@ define(function (require, exports, module) {
                     getDataTable([name, 0, 1]);
                 });
                 
+                addContent('table-'+name, 'Table '+name, el);
+                el.find('.db-panel-tab-fields').trigger('click');
+            });
+            $(el).next().find('.db-table-text').off('click').on('click', function(){
+                $(this).next().toggle();
+            });
+        });
+    }
+
+    function getViewList(el){
+       simpleDomain.exec("getviews").done(function (data) {
+            $(el).parent().find('ul').remove();
+            $(Mustache.render(viewListTemplate, data)).insertAfter(el);
+            $(el).next().children().click(function(){
+                var tablePanel = Mustache.render(tablePanelTemplate, {table: $(this).attr('name')}), name = $(this).attr('name'), el = $(tablePanel);
+                el.find('.db-panel-tab-fields').off('click').on('click', function(){
+                    getFieldList(name);
+                });
+                el.find('.db-panel-tab-data').off('click').on('click', function(){
+                    getDataTable([name, 0, 1]);
+                });
+
                 addContent('table-'+name, 'Table '+name, el);
                 el.find('.db-panel-tab-fields').trigger('click');
             });
