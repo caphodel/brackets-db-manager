@@ -218,6 +218,53 @@ maxerr: 50, node: true */
                     callback(err.message);
                 } else {
                     query = "SELECT * FROM "+table+" ORDER BY "+pk+" OFFSET "+offset+" ROWS FETCH NEXT 100 ROWS ONLY;";
+                    console.log(query);
+                    var request2 = new Request(query, function(err, rowCount) {
+                        if (err) {
+                            callback(err.message);
+                        }
+                        else{
+                            callback(null, [fields, rows, rowCount, offset]);
+                        }
+                    });
+
+                    request2.on('row', function(columns) {
+                        var r = [];
+                        columns.forEach(function(column) {
+                            r.push(column.value);
+                            if(f==0)
+                                fields.push({name: column.metadata.colName});
+                        });
+                        f++;
+                        rows.push(r);
+                    });
+
+                    connection.execSql(request2);
+                }
+            });
+
+            request.on('row', function(columns) {
+                columns.forEach(function(column) {
+                    pk = column.value;
+                });
+            });
+        }
+
+        connection.execSql(request);
+
+    }
+
+    function cmdPagingView( param, callback) {
+        var Request = require('tedious').Request, rows = [], fields = [], f = 0, query, pk, table = param[0], offset = param[1];
+
+        if( version >= 11 ){
+            query = "SELECT top 1 column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '"+table+"'";
+
+            var request = new Request(query, function(err, rowCount) {
+                if (err) {
+                    callback(err.message);
+                } else {
+                    query = "SELECT * FROM "+table+" ORDER BY "+pk+" OFFSET "+offset+" ROWS FETCH NEXT 100 ROWS ONLY;";
                     var request2 = new Request(query, function(err, rowCount) {
                         if (err) {
                             callback(err.message);
@@ -320,6 +367,14 @@ maxerr: 50, node: true */
             cmdPaging,
             true,
             "Get data paging"
+        );
+
+        domainManager.registerCommand(
+            "simple",
+            "getdataview",
+            cmdPagingView,
+            true,
+            "Get data paging (view)"
         );
     }
 

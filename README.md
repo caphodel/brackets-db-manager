@@ -3,7 +3,7 @@ brackets-db Manager
 
 A brackets extension to querying a database server, now only support SQL server.
 
-Now it's only offer basic functionality, like browse databases, tables, show table fields, show table data in a paging table, run query (all text in a document or just a selection of it).
+Now it's only offer basic functionality, like browse databases, tables, views, show table fields, show table data in a paging table, run query (all text in a document or just a selection of it).
 
 How to connect to a database
 ====================
@@ -18,7 +18,7 @@ It is actually a modified of https://github.com/Azakur4/brackets-database becaus
 
 To do
 ====================
-- [ ] Show list of view
+- [x] Show list of view
 - [ ] Show and edit view
 - [ ] Show list of function
 - [ ] Show and edit function

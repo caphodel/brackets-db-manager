@@ -51,7 +51,7 @@ define(function (require, exports, module) {
             $('#dbsidebar').show();
             if (!is_connected) {
                 $("#database-panel .table-container").html(connectHtml);
-				initConnectView();
+                initConnectView();
             }
         }
     }
@@ -59,7 +59,7 @@ define(function (require, exports, module) {
     var simpleDomain;
 
     function connect() {
-		
+
         simpleDomain = new NodeDomain("simple", ExtensionUtils.getModulePath(module, "node/"+$("#dbinstance").val()));
         db_connect = {
             host: $("#dbhost").val(),
@@ -71,35 +71,35 @@ define(function (require, exports, module) {
             password: $("#dbpassword").val(),
             database: $("#dbdatabase").val()
         };
-        
+
         $('#dboptions')[0].dboptions = db_connect;
-        $('#dboptions').text(db_connect.database + ' @ ' + db_connect.host);
-        
+        $('#dboptions').text(db_connect.user + ' @ ' + db_connect.host);
+
         simpleDomain.exec("connect", $('#dboptions')[0].dboptions).done(function (data) {
-			var database = data[0], dblist = data[1];
-			if($('#dbsidebar').length === 0){
-				$('#sidebar').append(sidebarTemplate);
+            var database = data[0], dblist = data[1];
+            if($('#dbsidebar').length === 0){
+                $('#sidebar').append(sidebarTemplate);
                 Resizer.makeResizable($('#dbsidebar'), "vert", "top", 75);
             }
-			$('#dblist-container').empty().append(Mustache.render(dbListTemplate, dblist));
-            
+            $('#dblist-container').empty().append(Mustache.render(dbListTemplate, dblist));
+
             $('#db-active-database').empty().append('<option value="------">------</option>');
             $.each(dblist.database, function(i, val){
                 $('#db-active-database').append('<option value="'+val.dbname+'">'+val.dbname+'</option>');
             });
-			
+
             $('.db-tree-text').parent().off('click').on('click', function(e){
                 if($('#dboptions')[0].dboptions.database != $(this).find('.db-tree-text').attr('name')){
-                    $('#db-active-database').off('change')
+                    $('#db-active-database').off('change');
                     changeDatabase($(this).find('.db-tree-text').attr('name'), $(this), $(e.target).hasClass('db-tree-text'));
                     $('#db-active-database').on('change', function(e){
                         changeDatabase($(this).val(), false, false);
                     });
                 }
                 else {
-                    if($(e.target).hasClass('db-tree-text')){
-                       if(!$(this).find('.db-tree-text').next().is(':visible')){
-                            getTableList($(this).find('.db-tree-text').next().find('.db-show-table-list'));
+                    if($(e.target).hasClass('db-tree-text')){//db-show-table-list
+                        if(!$(this).find('.db-tree-text').next().is(':visible')){
+                            //getTableList($(this).find('.db-tree-text').next().find('.db-show-table-list'));
                             $(this).find('.db-tree-text').next().show();
                         }
                         else{
@@ -107,14 +107,14 @@ define(function (require, exports, module) {
                         }
                     }
                 }
-			});
-			
+            });
+
             $('#db-active-database').off('change').on('change', function(e){
                 changeDatabase($(this).val(), false, false);
-			});
-			
-			$('#dbdatabaselist').empty().append(database);
-			
+            });
+
+            $('#dbdatabaselist').empty().append(database);
+
             $(".db-connect").attr("disabled", "disabled");
             $(".db-disconnect").removeAttr("disabled");
             $(".db-query").removeAttr("disabled");
@@ -140,21 +140,23 @@ define(function (require, exports, module) {
             $(".db-query").val("");
 
             is_connected = false;
-			
+
             $("#database-panel .table-container").html(connectHtml);
-			
-			initConnectView();
+
+            initConnectView();
         }).fail(function (err) {
-			$('#dbquerymessage').text(err);
+            $('#dbquerymessage').text(err);
         });
     }
-	
-	function changeDatabase(dbName, el, toggle){
+
+    function changeDatabase(dbName, el, toggle){
         $('#dboptions')[0].dboptions.database = dbName;
         simpleDomain.exec("changedb", $('#dboptions')[0].dboptions, dbName).done(function (data) {
             $('#dbquerymessage').empty();
             if(data.status){
                 if(el != false && toggle != false){
+
+                    /*add click for table list*/
                     el.find('.db-tree-text').next().find('.db-show-table-list').off('click').on('click', function(){
                         if($(this).parent().find('ul').length > 0)
                             $(this).parent().find('ul').remove();
@@ -162,9 +164,56 @@ define(function (require, exports, module) {
                             getTableList(this);
                         }
                     });
+                    /******************************/
+
+                    /*add click for view list*/
+                    el.find('.db-tree-text').next().find('.db-show-view-list').off('click').on('click', function(){
+                        if($(this).parent().find('ul').length > 0)
+                            $(this).parent().find('ul').remove();
+                        else{
+                            getViewList(this);
+                        }
+                    });
+                    /******************************/
+
+                    /*set active database on selected database*/
                     $('#db-active-database').val(dbName);
-                    if(toggle)
+                    /******************************/
+
+                    /*show database ul children (table, view, ...)*/
+                    if(toggle){
                         $(el).find('.db-tree-text').next().toggle();
+                    }
+                    /******************************/
+
+                }
+                else{
+                    /*add click for table list*/
+                    el.find('.db-tree-text[name='+dbName+']').next().find('.db-show-table-list').off('click').on('click', function(){
+                        if($(this).parent().find('ul').length > 0)
+                            $(this).parent().find('ul').remove();
+                        else{
+                            getTableList(this);
+                        }
+                    });
+                    /******************************/
+
+                    /*add click for view list*/
+                    el.find('.db-tree-text[name='+dbName+']').next().find('.db-show-view-list').off('click').on('click', function(){
+                        if($(this).parent().find('ul').length > 0)
+                            $(this).parent().find('ul').remove();
+                        else{
+                            getViewList(this);
+                        }
+                    });
+                    /******************************/
+
+                    /*set active database on selected database*/
+                    $('#db-active-database').val(dbName);
+                    /******************************/
+                    if(toggle){
+                        $(el).find('.db-tree-text[name='+dbName+']').next().toggle();
+                    }
                 }
             }
             else{
@@ -172,10 +221,10 @@ define(function (require, exports, module) {
                 $('#db-active-database').val('------');
             }
         });
-	}
-    
+    }
+
     function getTableList(el){
-       simpleDomain.exec("gettables").done(function (data) {
+        simpleDomain.exec("gettables").done(function (data) {
             $(el).parent().find('ul').remove();
             $(Mustache.render(tableListTemplate, data)).insertAfter(el);
             $(el).next().children().click(function(){
@@ -186,7 +235,7 @@ define(function (require, exports, module) {
                 el.find('.db-panel-tab-data').off('click').on('click', function(){
                     getDataTable([name, 0, 1]);
                 });
-                
+
                 addContent('table-'+name, 'Table '+name, el);
                 el.find('.db-panel-tab-fields').trigger('click');
             });
@@ -197,34 +246,35 @@ define(function (require, exports, module) {
     }
 
     function getViewList(el){
-       simpleDomain.exec("getviews").done(function (data) {
+        simpleDomain.exec("getviews").done(function (data) {
             $(el).parent().find('ul').remove();
             $(Mustache.render(viewListTemplate, data)).insertAfter(el);
             $(el).next().children().click(function(){
                 var tablePanel = Mustache.render(tablePanelTemplate, {table: $(this).attr('name')}), name = $(this).attr('name'), el = $(tablePanel);
                 el.find('.db-panel-tab-fields').off('click').on('click', function(){
-                    getFieldList(name);
+                    getFieldList(name, 'view');
                 });
                 el.find('.db-panel-tab-data').off('click').on('click', function(){
-                    getDataTable([name, 0, 1]);
+                    getDataView([name, 0, 1]);
                 });
 
-                addContent('table-'+name, 'Table '+name, el);
+                addContent('view-'+name, 'View '+name, el);
                 el.find('.db-panel-tab-fields').trigger('click');
             });
-            $(el).next().find('.db-table-text').off('click').on('click', function(){
+            $(el).next().find('.db-view-text').off('click').on('click', function(){
                 $(this).next().toggle();
             });
         });
     }
-    
-    function getFieldList(tablename){
-       simpleDomain.exec("getfields", tablename).done(function (data) {
-           $('.db-tab-table-'+tablename+' .db-panel-content').empty().append(Mustache.render(tableFieldsTemplate, data));
+
+    function getFieldList(tablename, type){
+        type = type || 'table'
+        simpleDomain.exec("getfields", tablename).done(function (data) {
+            $('.db-tab-'+type+'-'+tablename+' .db-panel-content').empty().append(Mustache.render(tableFieldsTemplate, data));
         });
     }
 
-    
+
     function getDataTable(param){
         simpleDomain.exec("getdatatable", param).done(function (data) {
             if(data[1].length == 0 && (data[3]/100)>0){
@@ -233,8 +283,8 @@ define(function (require, exports, module) {
             }
             else{
                 var tableHtml, 
-                rows_array = [],
-                result_array = [];
+                    rows_array = [],
+                    result_array = [];
 
                 var i = 1 + param[1];
                 data[1].forEach(function (row) {
@@ -284,8 +334,66 @@ define(function (require, exports, module) {
         });
     }
 
+
+    function getDataView(param){
+        simpleDomain.exec("getdataview", param).done(function (data) {
+            if(data[1].length == 0 && (data[3]/100)>0){
+                param[1] = param[1] - 100;
+                getDataView(param);
+            }
+            else{
+                var tableHtml,
+                    rows_array = [],
+                    result_array = [];
+
+                var i = 1 + param[1];
+                data[1].forEach(function (row) {
+                    result_array = [];
+                    $.each(row, function (key, value) {
+                        if (value === null) {
+                            result_array.push('null');
+                        } else if (value === 0) {
+                            result_array.push('0');
+                        } else if (value.length === 0) {
+                            result_array.push(' ');
+                        } else {
+                            result_array.push(value);
+                        }
+                    });
+
+                    result_array.unshift(i);
+                    rows_array.push(result_array);
+                    i++;
+                });
+
+                tableHtml = $(Mustache.render(tableDataTemplate, {fields: data[0], rows: rows_array, page: param[2]}));
+
+                $('.db-tab-view-'+param[0]+' .db-panel-content').empty().append(tableHtml);
+
+                tableInit2(tableHtml);
+
+                tableHtml.find('.db-table-data-prev').click(function(){
+                    var val = $('.db-table-data-page').val(), offset = (val-2) * 100;
+
+                    if(val == 1){
+                        offset = 0;
+                    }
+                    else
+                        val--;
+                    getDataView([param[0], offset, val]);
+                });
+
+                tableHtml.find('.db-table-data-next').click(function(){
+                    var val = $('.db-table-data-page').val(), offset = val * 100;
+                    val++;
+                    getDataView([param[0], offset, val]);
+                });
+            }
+        });
+    }
+
     function querying(query) {
-    
+
         var rows = [],
             rows_array = [],
             result_array = [];
@@ -293,9 +401,9 @@ define(function (require, exports, module) {
         simpleDomain.exec("query", $('#dboptions')[0].dboptions, query).done(function (table) {
 
             rows = table[1];
-			
-			$('#dbquerymessage').text(table[2]+' rows retrieved.');
-            
+
+            $('#dbquerymessage').text(table[2]+' rows retrieved.');
+
             var i = 1;
             rows.forEach(function (row) {
                 result_array = [];
@@ -321,9 +429,9 @@ define(function (require, exports, module) {
             addContent('result', 'Result', tableHtml);
 
             tableInit2(tableHtml);
-            
+
         }).fail(function (err) {
-			$('#dbquerymessage').text(err);
+            $('#dbquerymessage').text(err);
         });
     }
 
@@ -332,7 +440,7 @@ define(function (require, exports, module) {
             return this.get(0).scrollHeight > this.height();
         }
     })($);
-    
+
     function getScrollbarWidth() {
         var outer = document.createElement("div");
         outer.style.visibility = "hidden";
@@ -369,10 +477,11 @@ define(function (require, exports, module) {
                 w = $(val).innerWidth();
             }
             $(val).innerWidth(w);
+            //$(el).find('tbody tr td:nth-child('+(i+1)+')').innerWidth(w)//.css('display', 'block');
             targetTh.innerWidth(w);
             totalW += $(val).outerWidth();
         });
-        
+
         var h = $(el).parent().innerHeight();
         h = h - $(el).find('.db-table-head').outerHeight(true) - $(el).find('.db-table-foot').outerHeight(true);
         $(el).find('.db-table-body').height(h).css('overflow', 'auto');
@@ -382,13 +491,17 @@ define(function (require, exports, module) {
         $(el).find('.db-table-body').scroll(function(){
             $(el).find('.db-table-head').scrollLeft($(this).scrollLeft());
         });
-        if($(el).find('.db-table-body').hasScrollBar()){
+        if(
+            $(el).find('.db-table-body').hasScrollBar()){
             $(el).find('.db-table-head thead tr').find('.db-scrollbar-th').remove();
             $(el).find('.db-table-head thead tr').append('<th class="db-scrollbar-th" style="width:'+getScrollbarWidth()+'px; margin: 0 !important; padding: 0px !important"></th>');
             $(el).find('.db-table-head table').outerWidth(totalW+getScrollbarWidth());
         }
+
+        $(el).find('.db-table-body table').css('table-layout', 'fixed');
+        $(el).find('.db-table-head table').css('table-layout', 'fixed');
     }
-    
+
     function addContent(id, name, content){
         $('.db-container').children().hide();
         $('.db-tabs').children().addClass('tab-inactive');
@@ -398,7 +511,7 @@ define(function (require, exports, module) {
         $('.db-container').append('<div class="db-tab-'+id+'" style="height: 100%;overflow: auto;display: flex;flex-direction: column;"></div>');
         $('.db-container').find('.db-tab-'+id).append(content);
     }
-    
+
     function run_query() {
         var editor = EditorManager.getCurrentFullEditor();
         var str_query = editor.getSelectedText();
@@ -432,24 +545,24 @@ define(function (require, exports, module) {
             }
         });
     }
-	
-	function loadSavedConnection(){
-		
-		var ExtensionUtils = brackets.getModule("utils/ExtensionUtils");
 
-		var path = ExtensionUtils.getModulePath(module);
-		
-		$.getJSON(path+'connection.json', function(data){
-			$('#dbSelectConnection').empty();
+    function loadSavedConnection(){
+
+        var ExtensionUtils = brackets.getModule("utils/ExtensionUtils");
+
+        var path = ExtensionUtils.getModulePath(module);
+
+        $.getJSON(path+'connection.json', function(data){
+            $('#dbSelectConnection').empty();
             $('#dbSelectConnection').append("<option value='' data-name=''>List of connection</option>");
-			$.each(data, function(i, val){
-				$('#dbSelectConnection').append("<option value='"+val.value+"' data-name='"+val.name+"'>"+val.name+"</option>");
-			});
-		});
-	}
-	
-	function saveConnection(){
-		var conn = {
+            $.each(data, function(i, val){
+                $('#dbSelectConnection').append("<option value='"+val.value+"' data-name='"+val.name+"'>"+val.name+"</option>");
+            });
+        });
+    }
+
+    function saveConnection(){
+        var conn = {
             host: $("#dbhost").val(),
             port: $("#dbport").val(),
             user: $("#dbuser").val(),
@@ -461,53 +574,54 @@ define(function (require, exports, module) {
             //serverinstance: $("#dbserverinstance").val(),
             instance: $("#dbinstance").val()
         },
-		data = [];
-		
-		$('#dbSelectConnection option[data-name='+conn.name+']').remove();
-		
-		$('#dbSelectConnection').append("<option value='"+JSON.stringify(conn)+"' data-name='"+conn.name+"'>"+conn.name+"</option>");
-		
-		$('#dbSelectConnection option').each(function(i, val){
-			data.push({name: $(val).text(), value: $(val).attr('value')});
-		});
-		
-		saveFile('connection.json', JSON.stringify(data));
-	}
-	
-	function setConnection(){
-		var data = JSON.parse($('#dbSelectConnection').val());
-		
-		$("#dbhost").val(data.host);
-		$("#dbport").val(data.port);
-		$("#dbuser").val(data.user);
-		$("#dbpassword").val(data.pass);
-		$("#dbname").val(data.name);
-		$("#dbdatabase").val(data.database);
-		$("#dbinstance").val(data.instance);
-        //$("#dbserverinstance").val(data.serverinstance);
-	}
-	
-	function saveFile(filename, content){
-		
-		var ExtensionUtils = brackets.getModule("utils/ExtensionUtils");
+            data = [];
 
-		var path = ExtensionUtils.getModulePath(module);
-		
-		brackets.fs.writeFile(path+ filename, content, "utf8", function(err) {
-			if(err){
-				console.log(err);
+        $('#dbSelectConnection option[data-name='+conn.name+']').remove();
+
+        $('#dbSelectConnection').append("<option value='"+JSON.stringify(conn)+"' data-name='"+conn.name+"'>"+conn.name+"</option>");
+
+        $('#dbSelectConnection option').each(function(i, val){
+            if(i!=0)
+                data.push({name: $(val).text(), value: $(val).attr('value')});
+        });
+
+        saveFile('connection.json', JSON.stringify(data));
+    }
+
+    function setConnection(){
+        var data = JSON.parse($('#dbSelectConnection').val());
+
+        $("#dbhost").val(data.host);
+        $("#dbport").val(data.port);
+        $("#dbuser").val(data.user);
+        $("#dbpassword").val(data.pass);
+        $("#dbname").val(data.name);
+        $("#dbdatabase").val(data.database);
+        $("#dbinstance").val(data.instance);
+        //$("#dbserverinstance").val(data.serverinstance);
+    }
+
+    function saveFile(filename, content){
+
+        var ExtensionUtils = brackets.getModule("utils/ExtensionUtils");
+
+        var path = ExtensionUtils.getModulePath(module);
+
+        brackets.fs.writeFile(path+ filename, content, "utf8", function(err) {
+            if(err){
+                console.log(err);
             }
-		});
-	}
-	
-	function initConnectView(){
-		loadSavedConnection();
-		$('#dbsaveconnection').click(function(){
-			saveConnection();
-		});
-		$('#dbSelectConnection').change(function(){
-			setConnection();
-		});
+        });
+    }
+
+    function initConnectView(){
+        loadSavedConnection();
+        $('#dbsaveconnection').click(function(){
+            saveConnection();
+        });
+        $('#dbSelectConnection').change(function(){
+            setConnection();
+        });
         $(".db-connect").click(function(){
             connect();
         });
@@ -516,16 +630,16 @@ define(function (require, exports, module) {
                 tableInit2(val);
             });
         });
-	}
+    }
 
     AppInit.appReady(function () {
         var panelHtml = Mustache.render(panelTemplate);
         var $panelHtml = $(panelHtml);
 
         panel = WorkspaceManager.createBottomPanel(ext_id, $panelHtml, 100);
-        
-		ExtensionUtils.loadStyleSheet(module, "css/db.css");
-		
+
+        ExtensionUtils.loadStyleSheet(module, "css/db.css");
+
         CommandManager.register("Database Manager", ext_id, handlePanel);
 
         var menu = Menus.getMenu(Menus.AppMenuBar.VIEW_MENU);

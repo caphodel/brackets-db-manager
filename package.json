@@ -2,9 +2,9 @@
     "name": "deddy.dbmanager",
 
     "title": "Brackets DB Manager",
-    "description": "A brackets extension to querying a database server, now only support SQL server. Now it's only offer basic functionality, like browse databases, tables, show table fields, show table data in a paging table, run query (all text in a document or just a selection of it). PLease report/info me about bug, issue and idea, so I can fix and improve this addon. Please click read more to learn how to connect to a database. Thanks",
+    "description": "A brackets extension to querying a database server, now only support SQL server, other database will follow. Now it's only offer basic functionality, like browse databases, tables, show table fields, show table data in a paging table, run query. Changelog on this update: database views, bug fix for table paging, etc. Please click read more to learn how to use it. Thanks",
     "keywords": ["Database", "sql server"],
-    "version": "0.1.1",
+    "version": "0.1.2",
 
     "license": "MIT",
     "homepage": "",
